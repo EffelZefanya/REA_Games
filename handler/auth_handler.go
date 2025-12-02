@@ -1,39 +1,31 @@
 package handler
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"rea_games/entity"
+	"rea_games/helper"
 	"rea_games/repository"
-	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler struct {
     userRepo *repository.UserRepository
-    scanner  *bufio.Scanner
+    inputter  *helper.Inputter
 }
 
 func NewAuthHandler() *AuthHandler {
     return &AuthHandler{
         userRepo: repository.NewUserRepository(),
-        scanner:  bufio.NewScanner(os.Stdin),
+        inputter:  helper.NewInputter(),
     }
-}
-
-func (h *AuthHandler) readInput(prompt string) string {
-    fmt.Print(prompt)
-    h.scanner.Scan()
-    return strings.TrimSpace(h.scanner.Text())
 }
 
 func (h *AuthHandler) Register() (int, error) {
     var user entity.User
     
-    user.Email = h.readInput("Enter email: ")
-    password := h.readInput("Enter password: ")
+    user.Email = h.inputter.ReadInput("Enter email: ")
+    password := h.inputter.ReadInput("Enter password: ")
 
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
     if err != nil {
@@ -53,8 +45,8 @@ func (h *AuthHandler) Register() (int, error) {
 func (h *AuthHandler) Login() (int, error) {
     var loginReq entity.LoginRequest
     
-    loginReq.Email = h.readInput("Enter email: ")
-    loginReq.Password = h.readInput("Enter password: ")
+    loginReq.Email = h.inputter.ReadInput("Enter email: ")
+    loginReq.Password = h.inputter.ReadInput("Enter password: ")
 
     user, err := h.userRepo.GetUserByEmail(loginReq.Email)
     if err != nil {
