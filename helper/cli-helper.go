@@ -23,3 +23,7 @@ func ShowMainMenu() {
 	fmt.Println("5. Exit")
 	fmt.Println("==========================")
 }
+
+func HandleGameOperations(){
+	
+}
