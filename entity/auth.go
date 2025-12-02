@@ -1,12 +1,12 @@
 package entity
 
 type LoginRequest struct {
-    Email    string `json:"email"`
-    Password string `json:"password"`
+	Email    string
+	Password string
 }
 
 type AuthResponse struct {
-    UserID int    `json:"user_id"`
-    Email  string `json:"email"`
-    Token  string `json:"token"`
+	UserID int
+	Email  string
+	Token  string
 }

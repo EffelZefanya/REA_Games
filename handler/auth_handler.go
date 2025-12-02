@@ -10,54 +10,54 @@ import (
 )
 
 type AuthHandler struct {
-    userRepo *repository.UserRepository
-    inputter  *helper.Inputter
+	userRepo *repository.UserRepository
+	inputter *helper.Inputter
 }
 
 func NewAuthHandler() *AuthHandler {
-    return &AuthHandler{
-        userRepo: repository.NewUserRepository(),
-        inputter:  helper.NewInputter(),
-    }
+	return &AuthHandler{
+		userRepo: repository.NewUserRepository(),
+		inputter: helper.NewInputter(),
+	}
 }
 
 func (h *AuthHandler) Register() (int, error) {
-    var user entity.User
-    
-    user.Email = h.inputter.ReadInput("Enter email: ")
-    password := h.inputter.ReadInput("Enter password: ")
+	var user entity.User
 
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-    if err != nil {
-        return 0, err
-    }
-    user.PasswordHash = string(hashedPassword)
+	user.Email = h.inputter.ReadInput("Enter email: ")
+	password := h.inputter.ReadInput("Enter password: ")
 
-    err = h.userRepo.CreateUser(&user)
-    if err != nil {
-        return 0, err
-    }
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return 0, err
+	}
+	user.PasswordHash = string(hashedPassword)
 
-    fmt.Println("User registered successfully!")
-    return user.ID, nil
+	err = h.userRepo.CreateUser(&user)
+	if err != nil {
+		return 0, err
+	}
+
+	fmt.Println("User registered successfully!")
+	return user.User_Id, nil
 }
 
 func (h *AuthHandler) Login() (int, error) {
-    var loginReq entity.LoginRequest
-    
-    loginReq.Email = h.inputter.ReadInput("Enter email: ")
-    loginReq.Password = h.inputter.ReadInput("Enter password: ")
+	var loginReq entity.LoginRequest
 
-    user, err := h.userRepo.GetUserByEmail(loginReq.Email)
-    if err != nil {
-        return 0, fmt.Errorf("invalid credentials")
-    }
+	loginReq.Email = h.inputter.ReadInput("Enter email: ")
+	loginReq.Password = h.inputter.ReadInput("Enter password: ")
 
-    err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(loginReq.Password))
-    if err != nil {
-        return 0, fmt.Errorf("invalid credentials")
-    }
+	user, err := h.userRepo.GetUserByEmail(loginReq.Email)
+	if err != nil {
+		return 0, fmt.Errorf("invalid credentials")
+	}
 
-    fmt.Println("Login successful!")
-    return user.ID, nil
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(loginReq.Password))
+	if err != nil {
+		return 0, fmt.Errorf("invalid credentials")
+	}
+
+	fmt.Println("Login successful!")
+	return user.User_Id, nil
 }

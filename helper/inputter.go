@@ -8,11 +8,11 @@ import (
 	"strings"
 )
 
-type Inputter struct{
+type Inputter struct {
 	scanner *bufio.Reader
 }
 
-func NewInputter() *Inputter{
+func NewInputter() *Inputter {
 	return &Inputter{
 		scanner: bufio.NewReader(os.Stdin),
 	}
@@ -29,7 +29,7 @@ func (in *Inputter) ReadInput(prompt string) string {
 		}
 
 		trimmedInput := strings.TrimSpace(input)
-		if trimmedInput == ""{
+		if trimmedInput == "" {
 			fmt.Println("[Error] Please input a value")
 			continue
 		}
