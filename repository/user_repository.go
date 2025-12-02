@@ -14,13 +14,13 @@ func NewUserRepository() *UserRepository {
 
 func (r *UserRepository) CreateUser(user *entity.User) error {
 	query := `INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING user_id, created_at, updated_at`
-	return r.db.QueryRow(query, user.Email, user.PasswordHash).Scan(&user.User_Id, &user.CreatedAt, &user.UpdatedAt)
+	return r.db.QueryRow(query, user.Email, user.PasswordHash).Scan(&user.UserId, &user.CreatedAt, &user.UpdatedAt)
 }
 
 func (r *UserRepository) GetUserByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	query := `SELECT user_id, email, password_hash, created_at, updated_at FROM users WHERE email = $1 AND deleted_at IS NULL`
-	err := r.db.QueryRow(query, email).Scan(&user.User_Id, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	err := r.db.QueryRow(query, email).Scan(&user.UserId, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
