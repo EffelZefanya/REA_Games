@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type User struct {
-	User_Id       int
+	UserId       int
 	Email        string
 	PasswordHash string
 	CreatedAt    time.Time

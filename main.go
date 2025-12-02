@@ -59,10 +59,34 @@ func main(){
             default:
                 fmt.Println("❌ Invalid choice! Please try again.\n")
             }
-        }else {
+        } else {
             fmt.Println("You are now logged in.")
             fmt.Println("Currently assigned as User ID: %d", currentUserId)
-            return
+            helper.ShowMainMenu()
+            choice := inputter.ReadInt("Choose option: ")
+
+            switch choice {
+            case 1:
+                helper.ClearScreen()
+                helper.HandleGameOperations()
+            case 2:
+                helper.ClearScreen()
+                // handleOrderOperations(currentUserID)
+            case 3:
+                helper.ClearScreen()
+                // handleReportOperations()
+            case 4:
+                helper.ClearScreen()
+                fmt.Println("✅ Logged out successfully!\n")
+                loggedIn = false
+                currentUserId = 0
+            case 5:
+                helper.ClearScreen()
+                fmt.Println("👋 Thank you for using Bookstore CLI. Goodbye!")
+                return
+            default:
+                fmt.Println("❌ Invalid choice! Please try again.\n")
+            }
         }
 	}
 }

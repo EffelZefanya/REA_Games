@@ -39,7 +39,7 @@ func (h *AuthHandler) Register() (int, error) {
 	}
 
 	fmt.Println("User registered successfully!")
-	return user.User_Id, nil
+	return user.UserId, nil
 }
 
 func (h *AuthHandler) Login() (int, error) {
@@ -59,5 +59,5 @@ func (h *AuthHandler) Login() (int, error) {
 	}
 
 	fmt.Println("Login successful!")
-	return user.User_Id, nil
+	return user.UserId, nil
 }
