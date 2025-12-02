@@ -26,12 +26,12 @@ INSERT INTO developers (developer_name) VALUES
 ('Ubisoft');
 
 -- Seed data for users table
-INSERT INTO users (username, email, password_hash) VALUES
-('john_doe', 'john.doe@example.com', 'hashedpassword1'),
-('jane_smith', 'jane.smith@example.com', 'hashedpassword2'),
-('alex_williams', 'alex.williams@example.com', 'hashedpassword3'),
-('lily_brown', 'lily.brown@example.com', 'hashedpassword4'),
-('james_jones', 'james.jones@example.com', 'hashedpassword5');
+INSERT INTO users (email, password_hash) VALUES
+('john.doe@example.com', 'hashedpassword1'),
+('jane.smith@example.com', 'hashedpassword2'),
+( 'alex.williams@example.com', 'hashedpassword3'),
+('lily.brown@example.com', 'hashedpassword4'),
+('james.jones@example.com', 'hashedpassword5');
 
 -- Seed data for games table
 INSERT INTO games (developer_id, genre_id, game_detail_id, title, price, release_date) VALUES
@@ -54,7 +54,7 @@ INSERT INTO genre_game (genre_id, game_id) VALUES
 (2, 1); -- Uncharted 4 is also an Adventure game
 
 -- Seed data for orders table
-INSERT INTO orders (users_id, game_id, order_date, game_quantity, total_price) VALUES
+INSERT INTO orders (user_id, game_id, order_date, game_quantity, total_price) VALUES
 (1, 1, '2023-11-25', 1, 59.99),
 (2, 2, '2023-11-26', 2, 139.98),
 (3, 3, '2023-11-27', 1, 39.99),
