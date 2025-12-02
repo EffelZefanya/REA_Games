@@ -26,8 +26,7 @@ create table developers(
 );
 
 create table users (
-  users_id SERIAL primary key ,
-  username varchar(255) NOT NULL ,
+  user_id SERIAL primary key ,
   email varchar(255)  NOT NULL,
   password_hash varchar(255) NOT NULL ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -60,8 +59,8 @@ create table genre_game (
 );
 
 create table orders (
-  orders_id SERIAL primary key ,
-  users_id integer NOT NULL REFERENCES users(users_id) ON DELETE CASCADE,
+  order_id SERIAL primary key ,
+  user_id integer NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
   game_id integer NOT NULL REFERENCES games(game_id) ON DELETE CASCADE,
   order_date date NOT NULL,
   game_quantity int NOT NULL,
