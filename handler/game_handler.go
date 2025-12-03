@@ -256,11 +256,12 @@ func (h *GameHandler) DeleteGame() error {
 		fmt.Println("error database cannot get games")
 		return err
 	}
-	gameID := h.inputter.ReadInt("Enter game ID to update: ")
+	gameID := h.inputter.ReadInt("Enter game ID to delete: ")
 
 	err = h.gameRepo.DeleteGame(gameID)
 	if err != nil {
 		return err
 	}
+	fmt.Println("✅ game deleted successfully!")
 	return nil
 }

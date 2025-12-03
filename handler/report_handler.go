@@ -23,18 +23,15 @@ func NewReportHandler() *ReportHandler {
 }
 
 func (h *ReportHandler) GetDevelopersReport() error {
-	// Call the repository function to fetch the report data
 	reportData, err := h.reportRepo.GetDevelopersReport()
 	if err != nil {
 		return err
 	}
 
-	// Check if any data was returned
 	if len(reportData) == 0 {
 		return err
 	}
 
-	// Print the report data
 	fmt.Println("--- 📈 Developers Report ---")
 	for _, report := range reportData {
 		fmt.Printf(
