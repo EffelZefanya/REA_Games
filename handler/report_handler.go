@@ -8,13 +8,13 @@ import (
 
 type ReportHandler struct {
 	reportRepo *repository.ReportRepository
-	inputter  *helper.Inputter
+	inputter   *helper.Inputter
 }
 
 func NewReportHandler() *ReportHandler {
 	return &ReportHandler{
 		reportRepo: repository.NewReportRepository(),
-		inputter:  helper.NewInputter(),
+		inputter:   helper.NewInputter(),
 	}
 }
 
