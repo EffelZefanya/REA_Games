@@ -234,7 +234,7 @@ func (h *GameHandler) UpdateGames() error {
 		genresearched,
 		price,
 		quantity,
-		releasedateparsed,
+		releasedateparsed.Format("2006-01-02"),
 		developersearched,
 	)
 

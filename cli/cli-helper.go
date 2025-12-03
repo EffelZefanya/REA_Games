@@ -162,10 +162,10 @@ func HandleGameOperations() {
 			}
 		case 4:
 			fmt.Println("\n--- Delete A Game ---")
-			// err := orderHandler.UpdateOrder()
-			// if err != nil {
-			// 	fmt.Printf("❌ Error: %v\n", err)
-			// }
+			err := gamehandler.DeleteGame()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+			}
 		case 5:
 			ClearScreen()
 			return
