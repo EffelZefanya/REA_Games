@@ -16,9 +16,9 @@ Features that they request:
 
 - Manage games
 - Manage orders
-- Reporting game stock
+- Game Stock Report
+- Developers' Games Report
 - Order Report
-- User Metric Report
 
 ## Solution
 
