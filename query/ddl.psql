@@ -8,12 +8,11 @@ create table genre (
 );
 
 create table games_detail (
-  game_detail_id SERIAL primary key ,
+  game_detail_id INTEGER primary key ,
   description text NOT NULL ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table developers(
@@ -22,7 +21,6 @@ create table developers(
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table users (
@@ -32,21 +30,19 @@ create table users (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table games (
   game_id serial primary key ,
   developer_id integer NOT NULL REFERENCES developers(developer_id) ON DELETE CASCADE,
-  genre_id integer NOT NULL REFERENCES genre(genre_id) ON DELETE CASCADE,
   game_detail_id integer NOT NULL REFERENCES games_detail(game_detail_id) ON DELETE CASCADE,
   title varchar(255) NOT NULL,
   price float NOT NULL,
   release_date Date NOT NULL,
+  game_quantity int NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table genre_game (
@@ -68,5 +64,4 @@ create table orders (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
