@@ -125,7 +125,7 @@ func (h *OrderHandler) ListOrders() error {
 			strings.Join(genres, ", "),
 			order.GameQuantity,
 			order.TotalPrice,
-			order.CreatedAt.Format("2006-01-02 15:04"),
+			order.CreatedAt.Format("2006-01-02"),
 		)
 	}
 
