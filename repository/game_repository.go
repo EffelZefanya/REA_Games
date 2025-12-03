@@ -126,7 +126,6 @@ func (r *GameRepository) GetGenresByGameID(gameID int) ([]string, error) {
 	return genres, nil
 }
 
-// UpdateGameQuantity remains the same
 func (r *GameRepository) UpdateGameQuantity(gameID int, quantity int) error {
 	query := `
 		UPDATE games
@@ -219,7 +218,6 @@ func (r *GameRepository) GetGenreByID(genreID []int) ([]string, error) {
 	return genres, nil
 }
 
-// arya bisa bikin untuk add, update dan delete games ya jadinya
 func (r *GameRepository) CreateGame(game *entity.Game) error {
 
 	query := `

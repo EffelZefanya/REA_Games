@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-// Btw Arya, ini karena Primary Key untuk game_detailnya serial, berarti kan dia ga bisa diset ya. Ini aku ubah jadi integer ya, jadinya dia akan ngikutin id si gamenya.
-
-// Nanti pas kamu bikin game id jangan lupa ini ya
-
 type GameHandler struct {
 	gameRepo      *repository.GameRepository
 	developerRepo *repository.DeveloperRepository
@@ -32,7 +28,6 @@ func NewGameHandler() *GameHandler {
 func (h *GameHandler) CreateGame() error {
 	fmt.Println("\n=== Add Games ===")
 	var layout = "2006-01-02"
-	//gameID := h.inputter.ReadInt("\nEnter game ID: ")
 	title := h.inputter.ReadInput("Enter Title: ")
 	price := h.inputter.ReadFloat("Enter Price: ")
 	releasedate := h.inputter.ReadInput("Enter Date: ")
@@ -121,12 +116,15 @@ func (h *GameHandler) ListGames() error {
 		if game.GameQuantity > 0 {
 			genres, _ := h.gameRepo.GetGenresByGameID(game.GameID)
 			fmt.Printf(
-				"ID: %d | Title: %s | Genres: %s | Price: %.2f | Stock: %d\n",
+
+				"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current Developer: %s\n",
 				game.GameID,
 				game.Title,
-				strings.Join(genres, ", "),
+				genres,
 				game.Price,
 				game.GameQuantity,
+				game.ReleaseDate.Format("2006-01-02"),
+				game.DeveloperName,
 			)
 		}
 	}
@@ -134,7 +132,6 @@ func (h *GameHandler) ListGames() error {
 }
 
 func (h *GameHandler) UpdateGames() error {
-	// var input string
 	var layout = "2006-01-02"
 	err := h.ListGames()
 	if err != nil {
@@ -234,7 +231,7 @@ func (h *GameHandler) UpdateGames() error {
 		genresearched,
 		price,
 		quantity,
-		releasedateparsed,
+		releasedateparsed.Format("2006-01-02"),
 		developersearched,
 	)
 
