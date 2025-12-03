@@ -171,7 +171,7 @@ func (h *GameHandler) UpdateGames() error {
 
 	title := h.inputter.ReadInput("Enter Title :")
 	price := h.inputter.ReadFloat("Enter Price :")
-	releasedate := h.inputter.ReadInput("Enter Release_Date :")
+	releasedate := h.inputter.ReadInput("Enter Release_Date (YYYY-MM-DD):")
 
 	releasedateparsed, err := time.Parse(layout, releasedate)
 	if err != nil {
