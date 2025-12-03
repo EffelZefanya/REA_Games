@@ -20,8 +20,8 @@ func (r *OrderRepository) CreateOrder(order *entity.Order) error {
 			user_id, 
 			game_id, 
 			order_date, 
-			quantity, 
-			price
+			game_quantity, 
+			total_price
 		)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING order_id, created_at
@@ -32,8 +32,8 @@ func (r *OrderRepository) CreateOrder(order *entity.Order) error {
 		order.UserID,
 		order.GameID,
 		order.OrderDate,
-		order.Quantity,
-		order.Price,
+		order.GameQuantity,
+		order.TotalPrice,
 	).Scan(
 		&order.OrderID,
 		&order.CreatedAt,
@@ -47,8 +47,8 @@ func (r *OrderRepository) GetAllOrders() ([]entity.Order, error) {
 			o.user_id,
 			o.game_id,
 			o.order_date,
-			o.quantity,
-			o.price,
+			o.game_quantity,
+			o.total_price,
 			o.created_at,
 			u.email,
 			g.title
@@ -75,8 +75,8 @@ func (r *OrderRepository) GetAllOrders() ([]entity.Order, error) {
 			&order.UserID,
 			&order.GameID,
 			&order.OrderDate,
-			&order.Quantity,
-			&order.Price,
+			&order.GameQuantity,
+			&order.TotalPrice,
 			&order.CreatedAt,
 			&order.UserEmail,
 			&order.GameTitle,
@@ -92,13 +92,46 @@ func (r *OrderRepository) GetAllOrders() ([]entity.Order, error) {
 	return orders, nil
 }
 
+func (r *OrderRepository) GetOrderByID(id int) (*entity.Order, error) {
+	query := `
+		SELECT
+			order_id,
+			user_id,
+			game_id,
+			game_quantity,
+			total_price,
+			created_at
+		FROM orders
+		WHERE order_id = $1
+		AND deleted_at IS NULL
+	`
+
+	var order entity.Order
+
+	err := r.db.QueryRow(query, id).Scan(
+		&order.OrderID,
+		&order.UserID,
+		&order.GameID,
+		&order.GameQuantity,
+		&order.TotalPrice,
+		&order.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &order, nil
+}
+
+
 func (r *OrderRepository) GetOrdersByUserID(userID int) ([]entity.Order, error) {
 	query := `
 		SELECT 
 			o.order_id,
 			o.game_id,
-			o.quantity,
-			o.price,
+			o.game_quantity,
+			o.total_price,
 			o.order_date,
 			o.created_at,
 			g.title
@@ -123,8 +156,8 @@ func (r *OrderRepository) GetOrdersByUserID(userID int) ([]entity.Order, error) 
 		err := rows.Scan(
 			&order.OrderID,
 			&order.GameID,
-			&order.Quantity,
-			&order.Price,
+			&order.GameQuantity,
+			&order.TotalPrice,
 			&order.OrderDate,
 			&order.CreatedAt,
 			&order.GameTitle,
@@ -140,30 +173,20 @@ func (r *OrderRepository) GetOrdersByUserID(userID int) ([]entity.Order, error) 
 	return orders, nil
 }
 
-func (r *OrderRepository) UpdateOrder(order *entity.Order) error {
+func (r *OrderRepository) UpdateOrder(orderID int, qty int, total float64) error {
 	query := `
 		UPDATE orders
-		SET
-			game_id    = $1,
-			quantity   = $2,
-			price      = $3,
-			order_date = $4,
-			updated_at = NOW()
-		WHERE order_id = $5
-		AND deleted_at IS NULL
+		SET game_quantity = $1,
+		    total_price = $2,
+		    updated_at = NOW()
+		WHERE order_id = $3
+		  AND deleted_at IS NULL
 	`
 
-	_, err := r.db.Exec(
-		query,
-		order.GameID,
-		order.Quantity,
-		order.Price,
-		order.OrderDate,
-		order.OrderID,
-	)
-
+	_, err := r.db.Exec(query, qty, total, orderID)
 	return err
 }
+
 
 func (r *OrderRepository) DeleteOrder(id int) error {
 	query := `

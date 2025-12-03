@@ -13,7 +13,6 @@ create table games_detail (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table developers(
@@ -22,7 +21,6 @@ create table developers(
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table users (
@@ -32,7 +30,6 @@ create table users (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table games (
@@ -43,10 +40,10 @@ create table games (
   title varchar(255) NOT NULL,
   price float NOT NULL,
   release_date Date NOT NULL,
+  game_quantity int NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );
 
 create table genre_game (
@@ -68,5 +65,4 @@ create table orders (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ 
-
 );

@@ -11,7 +11,6 @@ import (
 )
 
 func ConnectDB() *sql.DB {
-	// Load .env file if it exists
 	_ = godotenv.Load()
 
 	user := os.Getenv("user")
@@ -24,7 +23,6 @@ func ConnectDB() *sql.DB {
 		log.Fatal("One or more required environment variables are missing")
 	}
 
-	// Build the connection string
 	psqlInfo := fmt.Sprintf(
 		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 		user,
