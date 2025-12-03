@@ -25,8 +25,6 @@ func (r *ReportRepository) GetDevelopersReport() ([]entity.DeveloperGameCountRep
 		GROUP BY
 			d.developer_id, d.developer_name
 		ORDER BY
-			d.developer_name
-		SORT BY
 			d.developer_id ASC;
 	`
 	rows, err := r.db.Query(query)
