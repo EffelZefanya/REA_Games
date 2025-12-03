@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"fmt"
 	"rea_games/entity"
+	"time"
 )
 
 type GameRepository struct {
@@ -14,7 +16,7 @@ func NewGameRepository() *GameRepository {
 	}
 }
 
-func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
+func (r *GameRepository) GetAllGamesDisplay() ([]entity.GameDisplay, error) {
 	query := `
 		SELECT
 			g.game_id,
@@ -38,9 +40,9 @@ func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
 	}
 	defer rows.Close()
 
-	var games []entity.Game
+	var games []entity.GameDisplay
 	for rows.Next() {
-		var game entity.Game
+		var game entity.GameDisplay
 		err := rows.Scan(
 			&game.GameID,
 			&game.Title,
@@ -60,7 +62,7 @@ func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
 	return games, nil
 }
 
-func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
+func (r *GameRepository) GetGameDisplayByID(gameID int) (*entity.GameDisplay, error) {
 	query := `
 		SELECT
 			g.game_id,
@@ -78,7 +80,7 @@ func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
 		AND g.deleted_at IS NULL
 	`
 
-	var game entity.Game
+	var game entity.GameDisplay
 	err := r.db.QueryRow(query, gameID).Scan(
 		&game.GameID,
 		&game.Title,
@@ -135,5 +137,201 @@ func (r *GameRepository) UpdateGameQuantity(gameID int, quantity int) error {
 	`
 
 	_, err := r.db.Exec(query, quantity, gameID)
+	return err
+}
+
+func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
+	query := `
+		SELECT
+			game_id,
+			title,
+			price,
+			release_date,
+			game_quantity,
+			developer_id,
+			created_at
+		FROM games 
+		WHERE game_id = $1
+		AND deleted_at IS NULL
+	`
+
+	var game entity.Game
+	err := r.db.QueryRow(query, gameID).Scan(
+		&game.GameID,
+		&game.Title,
+		&game.Price,
+		&game.ReleaseDate,
+		&game.GameQuantity,
+		&game.DeveloperName,
+		&game.CreatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &game, nil
+}
+
+// arya bisa bikin untuk add, update dan delete games ya jadinya
+func (r *GameRepository) CreateGame(game *entity.Game) error {
+
+	query := `
+		INSERT INTO games (
+		developer_id,
+		title,
+		price,
+		release_date,
+		game_quantity,
+		game_detail_id
+	)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING game_id, created_at
+	`
+	err := r.db.QueryRow(
+		query,
+		game.DeveloperName,
+		game.Title,
+		game.Price,
+		game.ReleaseDate,
+		game.GameQuantity,
+		1,
+	).Scan(
+		&game.GameID,
+		&game.CreatedAt,
+	)
+	if err != nil {
+		fmt.Println("error Inserting into games")
+		return err
+	}
+
+	descriptionquery := `
+		INSERT INTO games_detail
+	(
+		description, 
+		game_detail_id
+	)
+		VALUES ($1,$2)
+	`
+	_, err = r.db.Exec(
+		descriptionquery,
+		game.Description,
+		game.GameID,
+	)
+	if err != nil {
+		fmt.Println("error Inserting into description")
+		return err
+	}
+
+	updateGameDetailIDquery := `
+		UPDATE games
+		SET game_detail_id = $1
+		WHERE game_id = $2
+	`
+	_, err = r.db.Exec(updateGameDetailIDquery, game.GameID, game.GameID)
+	if err != nil {
+		fmt.Println("error GAME DECSRIPTION in database")
+		return err
+	}
+
+	insertGenreGamequery := `
+		INSERT INTO genre_game
+		(
+			game_id,
+			genre_id
+		)
+		VALUES ($1, $2)
+	`
+	for _, genre := range game.Genre {
+		_, err = r.db.Exec(
+			insertGenreGamequery,
+			game.GameID,
+			genre,
+		)
+		if err != nil {
+			fmt.Println("error GENRE in database")
+			return err
+		}
+	}
+
+	return err
+
+}
+
+func (r *GameRepository) UpdateGame(genre []int, release_date time.Time, developer_id int, title string, price float64, game_quantity int, game_id int) error {
+	query := `
+		UPDATE games
+		SET release_date = $1,
+			developer_id = $2,
+			title = $3,
+			price = $4,
+			game_quantity = $5,
+			updated_at = NOW()
+		WHERE game_id = $6
+		AND deleted_at IS NULL
+	`
+	_, err := r.db.Exec(query, release_date, developer_id, title, price, game_quantity, game_id)
+	if err != nil {
+		fmt.Println("Error Updating games")
+		return err
+	}
+	querydeletegenre := `
+		UPDATE genre_game
+			SET deleted_at = NOW()
+		WHERE game_id $1
+	`
+	_, err = r.db.Exec(querydeletegenre, game_id)
+	if err != nil {
+		fmt.Println("Error Updating Genre game")
+		return err
+	}
+
+	queryinsert := `
+			INSERT INTO genre_game
+		(
+			game_id,
+			genre_id
+		)
+		VALUES ($1, $2)
+	`
+	for _, genre := range genre {
+		_, err = r.db.Exec(
+			queryinsert,
+			game_id,
+			genre,
+		)
+		if err != nil {
+			fmt.Println("error GENRE in database")
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r *GameRepository) UpdateDescription(description string, game_id int) error {
+	query := `
+		UPDATE games_detail
+		SET description = $1
+			updated_at = NOW()
+		WHERE game_id = $2
+		AND deleted_at IS NULL
+	`
+	_, err := r.db.Exec(query, description, game_id)
+	return err
+}
+
+func (r *GameRepository) DeleteGame(release_date time.Time, developer_id int, title string, price float64, game_quantity int, game_id int) error {
+	query := `
+		UPDATE games
+		SET release_date = $1,
+			developer_id = $2,
+			title = $3,
+			price = $4,
+			game_quantity = $5,
+			updated_at = NOW()
+		WHERE game_id = $6
+		AND deleted_at IS NULL
+	`
+	_, err := r.db.Exec(query, release_date, developer_id, title, price, game_quantity, game_id)
 	return err
 }

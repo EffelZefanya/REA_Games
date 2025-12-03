@@ -27,7 +27,7 @@ func NewOrderHandler() *OrderHandler {
 func (h *OrderHandler) CreateOrder(userID int) error {
 	fmt.Println("\n=== Available Games ===")
 
-	games, err := h.gameRepo.GetAllGames()
+	games, err := h.gameRepo.GetAllGamesDisplay()
 	if err != nil {
 		return err
 	}
@@ -230,7 +230,6 @@ func (h *OrderHandler) UpdateOrder() error {
 	return nil
 }
 
-
 func (h *OrderHandler) DeleteOrder() error {
 	err := h.ListOrders()
 	if err != nil {
@@ -250,18 +249,18 @@ func (h *OrderHandler) DeleteOrder() error {
 	}
 
 	order, err := h.orderRepo.GetOrderByID(orderID)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
 	game, err := h.gameRepo.GetGameByID(order.GameID)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
 	newQuantity := game.GameQuantity + order.GameQuantity
 	err = h.gameRepo.UpdateGameQuantity(order.GameID, newQuantity)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 

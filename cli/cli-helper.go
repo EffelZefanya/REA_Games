@@ -84,40 +84,85 @@ func HandleOrderOperations(userID int) {
 	}
 }
 
-func HandleReportOperations(){
+func HandleReportOperations() {
 	reportHandler := handler.NewReportHandler()
 	inputter := helper.NewInputter()
-    
-    for {
-        fmt.Println("\n=== Reports ===")
-        fmt.Println("1. 👥 Developers' Games report")
-        fmt.Println("2. 📦 Games' Genres Report") 
-        fmt.Println("3. 🛒 Revenue Report")
-        fmt.Println("4. ↩️  Back to Main Menu")
-        fmt.Println("================")
-        
-        choice := inputter.ReadInt("Choose option: ")
-        
-        switch choice {
-        case 1:
-            fmt.Println("\n--- User Report ---")
-            err := reportHandler.GetDevelopersReport()
-            if err != nil {
-                fmt.Printf("❌ Error: %v\n", err)
-            }
-        case 2:
+
+	for {
+		fmt.Println("\n=== Reports ===")
+		fmt.Println("1. 👥 Developers' Games report")
+		fmt.Println("2. 📦 Games' Genres Report")
+		fmt.Println("3. 🛒 Revenue Report")
+		fmt.Println("4. ↩️  Back to Main Menu")
+		fmt.Println("================")
+
+		choice := inputter.ReadInt("Choose option: ")
+
+		switch choice {
+		case 1:
+			fmt.Println("\n--- User Report ---")
+			err := reportHandler.GetDevelopersReport()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+			}
+		case 2:
 			//TBA
-        case 3:
+		case 3:
 			//TBA
-        case 4:
-            ClearScreen()
-            return
-        default:
-            fmt.Println("❌ Invalid choice! Please try again.")
-        }
-    }
+		case 4:
+			ClearScreen()
+			return
+		default:
+			fmt.Println("❌ Invalid choice! Please try again.")
+		}
+	}
 }
 
 func HandleGameOperations() {
+	gamehandler := handler.NewGameHandler()
+	inputter := helper.NewInputter()
 
+	for {
+		fmt.Println("\n=== Game Management ===")
+		fmt.Println("1. 🎮  Create Game")
+		fmt.Println("2. 📋  List All Games")
+		fmt.Println("3. 🔄  Update Game")
+		fmt.Println("4. 🗑️  Delete Game")
+		fmt.Println("5. ↩️  Back to Main Menu")
+		fmt.Println("========================")
+
+		choice := inputter.ReadInt("Choose option: ")
+
+		switch choice {
+		case 1:
+			fmt.Println("\n--- Add New Game ---")
+			err := gamehandler.CreateGame()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+			}
+		case 2:
+			fmt.Println("\n--- List Of Games---")
+			err := gamehandler.ListGames()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+			}
+		case 3:
+			fmt.Println("\n--- Update A Game ---")
+			err := gamehandler.UpdateGames()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+			}
+		case 4:
+			fmt.Println("\n--- Delete A Game ---")
+			// err := orderHandler.UpdateOrder()
+			// if err != nil {
+			// 	fmt.Printf("❌ Error: %v\n", err)
+			// }
+		case 5:
+			ClearScreen()
+			return
+		default:
+			fmt.Println("❌ Invalid choice! Please try again.")
+		}
+	}
 }
