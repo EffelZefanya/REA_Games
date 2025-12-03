@@ -168,16 +168,10 @@ func (h *GameHandler) UpdateGames() error {
 			GameDisplay.DeveloperName,
 		)
 	}
-	titleoldval := game.Title
-	priceoldval := game.Price
-	releasedateoldvaal := game.ReleaseDate
-	dateString := releasedateoldvaal.Format("2006-01-02")
-	developeroldval := game.DeveloperName
-	quantityoldval := game.GameQuantity
 
-	title := h.inputter.ReadInputOldVal("Enter Title :", titleoldval)
-	price := h.inputter.ReadFloatOldVal("Enter Price :", priceoldval)
-	releasedate := h.inputter.ReadInputOldVal("Enter Release_Date :", dateString)
+	title := h.inputter.ReadInput("Enter Title :")
+	price := h.inputter.ReadFloat("Enter Price :")
+	releasedate := h.inputter.ReadInput("Enter Release_Date :")
 
 	releasedateparsed, err := time.Parse(layout, releasedate)
 	if err != nil {
@@ -198,7 +192,7 @@ func (h *GameHandler) UpdateGames() error {
 		)
 	}
 
-	developer := h.inputter.ReadIntOldVal("Enter Developer: ", developeroldval)
+	developer := h.inputter.ReadInt("Enter Developer: ")
 	genre := []int{}
 
 	genres, err := h.genreRepo.GetAllGenre()
@@ -223,9 +217,30 @@ func (h *GameHandler) UpdateGames() error {
 		genre = append(genre, input)
 	}
 
-	quantity := h.inputter.ReadIntOldVal("Enter quantity: ", quantityoldval)
+	quantity := h.inputter.ReadInt("Enter quantity: ")
 	if quantity < 0 {
 		fmt.Println("Quantity must be above 0")
+		return nil
+	}
+
+	genresearched, _ := h.gameRepo.GetGenreByID(genre)
+	developersearched, _ := h.gameRepo.GetDeveloperByID(developer)
+	fmt.Println("\n=== Change Summary ===")
+	fmt.Printf(
+
+		"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current Developer: %s\n",
+		game.GameID,
+		title,
+		genresearched,
+		price,
+		quantity,
+		releasedateparsed,
+		developersearched,
+	)
+
+	confirm := strings.ToLower(h.inputter.ReadInput("Confirm order? (y/n): "))
+	if confirm != "y" {
+		fmt.Println("❌ Order cancelled.")
 		return nil
 	}
 
@@ -233,24 +248,22 @@ func (h *GameHandler) UpdateGames() error {
 	if err != nil {
 		return err
 	}
-	// developers, err := h.developerRepo.GetAllDevelopers()
-	// if err != nil {
-	// 	fmt.Println("database error getting developers")
-	// 	return err
-	// }
 
-	// for _, developer := range developers {
-	// 	fmt.Printf(
-	// 		"ID: %d | Developer Name: %s\n",
-	// 		developer.Developer_id,
-	// 		developer.Developer_Name,
-	// 	)
-	// }
 	fmt.Println("✅ game updated successfully!")
 	return nil
 }
 
 func (h *GameHandler) DeleteGame() error {
+	err := h.ListGames()
+	if err != nil {
+		fmt.Println("error database cannot get games")
+		return err
+	}
+	gameID := h.inputter.ReadInt("Enter game ID to update: ")
 
+	err = h.gameRepo.DeleteGame(gameID)
+	if err != nil {
+		return err
+	}
 	return nil
 }

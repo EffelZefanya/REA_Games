@@ -172,6 +172,53 @@ func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
 	return &game, nil
 }
 
+func (r *GameRepository) GetDeveloperByID(DevID int) ([]string, error) {
+	var developers []string
+	query := `
+		SELECT developer_name
+		FROM developers
+		WHERE developer_id = $1
+		AND deleted_at IS NULL
+	`
+	rows, err := r.db.Query(query, DevID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var developer string
+		if err := rows.Scan(&developer); err != nil {
+			return nil, err
+		}
+		developers = append(developers, developer)
+	}
+
+	return developers, nil
+}
+
+func (r *GameRepository) GetGenreByID(genreID []int) ([]string, error) {
+	var genres []string
+	var temp string
+	query := `
+		SELECT genre_name
+		FROM genre
+		WHERE genre_id = $1
+		AND deleted_at IS NULL
+	`
+	for _, genre := range genreID {
+		err := r.db.QueryRow(query, genre).Scan(
+			&temp,
+		)
+		if err != nil {
+			return nil, err
+		}
+		genres = append(genres, temp)
+	}
+
+	return genres, nil
+}
+
 // arya bisa bikin untuk add, update dan delete games ya jadinya
 func (r *GameRepository) CreateGame(game *entity.Game) error {
 
@@ -277,7 +324,7 @@ func (r *GameRepository) UpdateGame(genre []int, release_date time.Time, develop
 	querydeletegenre := `
 		UPDATE genre_game
 			SET deleted_at = NOW()
-		WHERE game_id $1
+		WHERE game_id = $1
 	`
 	_, err = r.db.Exec(querydeletegenre, game_id)
 	if err != nil {
@@ -320,18 +367,36 @@ func (r *GameRepository) UpdateDescription(description string, game_id int) erro
 	return err
 }
 
-func (r *GameRepository) DeleteGame(release_date time.Time, developer_id int, title string, price float64, game_quantity int, game_id int) error {
+func (r *GameRepository) DeleteGame(game_id int) error {
 	query := `
 		UPDATE games
-		SET release_date = $1,
-			developer_id = $2,
-			title = $3,
-			price = $4,
-			game_quantity = $5,
-			updated_at = NOW()
-		WHERE game_id = $6
-		AND deleted_at IS NULL
+		SET deleted_at = NOW()
+		WHERE game_id = $1
 	`
-	_, err := r.db.Exec(query, release_date, developer_id, title, price, game_quantity, game_id)
-	return err
+	_, err := r.db.Exec(query, game_id)
+	if err != nil {
+		fmt.Println("Error Deleting Game")
+		return err
+	}
+	querydeletegenre := `
+		UPDATE genre_game
+		SET deleted_at = NOW()
+		WHERE game_id = $1
+	`
+	_, err = r.db.Exec(querydeletegenre, game_id)
+	if err != nil {
+		fmt.Println("Error Deleting Genre_game")
+		return err
+	}
+	querydeletedetail := `
+		UPDATE games_detail
+		SET deleted_at = NOW()
+		WHERE game_detail_id = $1
+	`
+	_, err = r.db.Exec(querydeletedetail, game_id)
+	if err != nil {
+		fmt.Println("Error Deleting Games_Detail")
+		return err
+	}
+	return nil
 }
