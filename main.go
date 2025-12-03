@@ -74,7 +74,7 @@ func main() {
 				cli.HandleOrderOperations(currentUserId)
 			case 3:
 				cli.ClearScreen()
-				// handleReportOperations()
+				cli.HandleReportOperations()
 			case 4:
 				cli.ClearScreen()
 				fmt.Println("✅ Logged out successfully!")

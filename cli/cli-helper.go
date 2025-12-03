@@ -84,6 +84,40 @@ func HandleOrderOperations(userID int) {
 	}
 }
 
+func HandleReportOperations(){
+	reportHandler := handler.NewReportHandler()
+	inputter := helper.NewInputter()
+    
+    for {
+        fmt.Println("\n=== Reports ===")
+        fmt.Println("1. 👥 Developers' Games report")
+        fmt.Println("2. 📦 Games' Genres Report") 
+        fmt.Println("3. 🛒 Revenue Report")
+        fmt.Println("4. ↩️  Back to Main Menu")
+        fmt.Println("================")
+        
+        choice := inputter.ReadInt("Choose option: ")
+        
+        switch choice {
+        case 1:
+            fmt.Println("\n--- User Report ---")
+            err := reportHandler.GetDevelopersReport()
+            if err != nil {
+                fmt.Printf("❌ Error: %v\n", err)
+            }
+        case 2:
+			//TBA
+        case 3:
+			//TBA
+        case 4:
+            ClearScreen()
+            return
+        default:
+            fmt.Println("❌ Invalid choice! Please try again.")
+        }
+    }
+}
+
 func HandleGameOperations() {
 
 }

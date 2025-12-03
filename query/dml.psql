@@ -6,13 +6,14 @@ INSERT INTO genre (genre_name) VALUES
 ('Simulation'),
 ('Sports');
 
-INSERT INTO games_detail (description) VALUES
-('An action-packed game with thrilling combat sequences.'),
-('A story-driven game with open-world exploration.'),
-('An immersive role-playing game with deep character development.'),
-('A tactical strategy game with multiplayer modes.'),
-('A simulation game with realistic management mechanics.'),
-('A sports simulation game with real-life teams and players.');
+INSERT INTO games_detail (game_detail_id, description) VALUES
+(1, 'An action-packed game with thrilling combat sequences.'),
+(2, 'A story-driven game with open-world exploration.'),
+(3, 'An immersive role-playing game with deep character development.'),
+(4, 'A tactical strategy game with multiplayer modes.'),
+(5, 'A simulation game with realistic management mechanics.'),
+(6, 'A sports simulation game with real-life teams and players.'),
+(7, 'Post-Apocalyptic FPS with lots of content.');
 
 INSERT INTO developers (developer_name) VALUES
 ('Naughty Dog'),
@@ -29,24 +30,28 @@ INSERT INTO users (email, password_hash) VALUES
 ('lily.brown@example.com', 'hashedpassword4'),
 ('james.jones@example.com', 'hashedpassword5');
 
-INSERT INTO games (developer_id, genre_id, game_detail_id, title, price, release_date, game_quantity) VALUES
-(1, 1, 1, 'Uncharted 4', 59.99, '2016-05-10', 99),
-(2, 2, 2, 'Red Dead Redemption 2', 69.99, '2018-10-26', 78),
-(3, 3, 3, 'The Elder Scrolls V: Skyrim', 39.99, '2011-11-11', 145),
-(4, 4, 4, 'Overwatch', 39.99, '2016-05-24', 30),
-(5, 5, 5, 'The Sims 4', 49.99, '2014-09-02', 45),
-(6, 6, 6, 'FIFA 21', 59.99, '2020-10-09', 20);
+INSERT INTO games (developer_id, game_detail_id, title, price, release_date, game_quantity) VALUES
+(1, 1, 'Uncharted 4', 59.99, '2016-05-10', 99),
+(2, 2, 'Red Dead Redemption 2', 69.99, '2018-10-26', 78),
+(3, 3, 'The Elder Scrolls V: Skyrim', 39.99, '2011-11-11', 145),
+(4, 4, 'Overwatch', 39.99, '2016-05-24', 30),
+(5, 5, 'The Sims 4', 49.99, '2014-09-02', 45),
+(6, 6, 'FIFA 21', 59.99, '2020-10-09', 20),
+(3, 7, 'Fallout 3 GOTY', 49.99, '2009-10-13', 115);
 
 INSERT INTO genre_game (genre_id, game_id) VALUES
 (1, 1),
 (2, 2),
 (3, 2),
 (3, 3),
+(1, 3),
 (4, 4),
 (5, 5),
 (6, 6),
 (1, 6),
-(2, 1);
+(2, 1),
+(1, 7),
+(3, 7);
 
 INSERT INTO orders (user_id, game_id, order_date, game_quantity, total_price) VALUES
 (1, 1, '2023-11-25', 1, 59.99),

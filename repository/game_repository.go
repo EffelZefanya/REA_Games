@@ -14,7 +14,6 @@ func NewGameRepository() *GameRepository {
 	}
 }
 
-// GetAllGames returns all games without aggregating genres
 func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
 	query := `
 		SELECT
@@ -30,7 +29,7 @@ func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
 		JOIN developers d ON g.developer_id = d.developer_id
 		JOIN games_detail gd ON g.game_detail_id = gd.game_detail_id
 		WHERE g.deleted_at IS NULL
-		ORDER BY g.created_at DESC
+		ORDER BY g.game_id ASC
 	`
 
 	rows, err := r.db.Query(query)
@@ -61,7 +60,6 @@ func (r *GameRepository) GetAllGames() ([]entity.Game, error) {
 	return games, nil
 }
 
-// GetGameByID returns a single game without genres
 func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
 	query := `
 		SELECT
@@ -98,7 +96,6 @@ func (r *GameRepository) GetGameByID(gameID int) (*entity.Game, error) {
 	return &game, nil
 }
 
-// GetGenresByGameID fetches all genres for a given game
 func (r *GameRepository) GetGenresByGameID(gameID int) ([]string, error) {
 	query := `
 		SELECT ge.genre_name
