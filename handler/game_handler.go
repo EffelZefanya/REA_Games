@@ -30,7 +30,7 @@ func (h *GameHandler) CreateGame() error {
 	var layout = "2006-01-02"
 	title := h.inputter.ReadInput("Enter Title: ")
 	price := h.inputter.ReadFloat("Enter Price: ")
-	releasedate := h.inputter.ReadInput("Enter Date: ")
+	releasedate := h.inputter.ReadInput("Enter Date(YYYY-MM-DD): ")
 	releasedateparsed, err := time.Parse(layout, releasedate)
 	if err != nil {
 		fmt.Println("Error date: ", err)
