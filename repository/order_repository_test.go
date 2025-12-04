@@ -255,4 +255,3 @@ func TestGetOrderByID_NotFound(t *testing.T) {
 	assert.Equal(t, sql.ErrNoRows, err)
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
-
