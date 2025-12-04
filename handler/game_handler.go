@@ -11,14 +11,14 @@ import (
 
 type GameHandler struct {
 	gameRepo      *repository.GameRepository
-	developerRepo *repository.DeveloperRepository
+	eloperRepo *repository.eloperRepository
 	genreRepo     *repository.GenreRepository
 	inputter      *helper.Inputter
 }
 
 func NewGameHandler() *GameHandler {
 	return &GameHandler{
-		developerRepo: repository.NewDeveloperRepository(),
+		eloperRepo: repository.NeweloperRepository(),
 		gameRepo:      repository.NewGameRepository(),
 		genreRepo:     repository.NewGenreRepository(),
 		inputter:      helper.NewInputter(),
@@ -36,20 +36,20 @@ func (h *GameHandler) CreateGame() error {
 		return fmt.Errorf("error parsing date")
 	}
 	description := h.inputter.ReadInput("Enter Description: ")
-	developers, err := h.developerRepo.GetAllDevelopers()
+	elopers, err := h.eloperRepo.GetAllelopers()
 	if err != nil {
-		return fmt.Errorf("error getting devloper")
+		return fmt.Errorf("error getting loper")
 	}
 
-	for _, developer := range developers {
+	for _, eloper := range elopers {
 		fmt.Printf(
-			"ID: %d | Developer Name: %s\n",
-			developer.Developer_id,
-			developer.Developer_Name,
+			"ID: %d | eloper Name: %s\n",
+			eloper.eloper_id,
+			eloper.eloper_Name,
 		)
 	}
 
-	developer := h.inputter.ReadInt("Enter Developer: ")
+	eloper := h.inputter.ReadInt("Enter eloper: ")
 	genre := []int{}
 
 	genres, err := h.genreRepo.GetAllGenre()
@@ -83,7 +83,7 @@ func (h *GameHandler) CreateGame() error {
 		ReleaseDate:   releasedateparsed,
 		GameQuantity:  quantity,
 		Price:         price,
-		DeveloperName: developer,
+		eloperName: eloper,
 		Description:   description,
 		Genre:         genre,
 	}
@@ -113,14 +113,14 @@ func (h *GameHandler) ListGames() error {
 			genres, _ := h.gameRepo.GetGenresByGameID(game.GameID)
 			fmt.Printf(
 
-				"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current Developer: %s\n",
+				"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current eloper: %s\n",
 				game.GameID,
 				game.Title,
 				genres,
 				game.Price,
 				game.GameQuantity,
 				game.ReleaseDate.Format("2006-01-02"),
-				game.DeveloperName,
+				game.eloperName,
 			)
 		}
 	}
@@ -148,14 +148,14 @@ func (h *GameHandler) UpdateGames() error {
 	if game.GameQuantity > 0 {
 		genres, _ := h.gameRepo.GetGenresByGameID(GameDisplay.GameID)
 		fmt.Printf(
-			"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current Developer: %s\n Current Descrition: %s\n",
+			"ID: %d\n  Title: %s\n  Genres: %s\n  Price: %.2f\n  Stock: %d\n  ReleaseDate: %s\n  Current eloper: %s\n Current Description: %s\n",
 			GameDisplay.GameID,
 			GameDisplay.Title,
 			strings.Join(genres, ", "),
 			GameDisplay.Price,
 			GameDisplay.GameQuantity,
 			GameDisplay.ReleaseDate.Format("2006-01-02"),
-			GameDisplay.DeveloperName,
+			GameDisplay.eloperName,
 			GameDisplay.Description,
 		)
 	}
@@ -168,20 +168,20 @@ func (h *GameHandler) UpdateGames() error {
 	if err != nil {
 		return fmt.Errorf("error parsing date")
 	}
-	developers, err := h.developerRepo.GetAllDevelopers()
+	elopers, err := h.eloperRepo.GetAllelopers()
 	if err != nil {
-		return fmt.Errorf("error getting developers")
+		return fmt.Errorf("error getting elopers")
 	}
 
-	for _, developer := range developers {
+	for _, eloper := range elopers {
 		fmt.Printf(
-			"ID: %d | Developer Name: %s\n",
-			developer.Developer_id,
-			developer.Developer_Name,
+			"ID: %d | eloper Name: %s\n",
+			eloper.eloper_id,
+			eloper.eloper_Name,
 		)
 	}
 
-	developer := h.inputter.ReadInt("Enter Developer: ")
+	eloper := h.inputter.ReadInt("Enter eloper: ")
 	genre := []int{}
 
 	genres, err := h.genreRepo.GetAllGenre()
@@ -212,7 +212,7 @@ func (h *GameHandler) UpdateGames() error {
 	}
 
 	genresearched, _ := h.gameRepo.GetGenreByID(genre)
-	developersearched, _ := h.gameRepo.GetDeveloperByID(developer)
+	elopersearched, _ := h.gameRepo.GeteloperByID(eloper)
 
 	fmt.Println("\n=== Change Summary ===")
 	fmt.Printf(
@@ -224,7 +224,7 @@ func (h *GameHandler) UpdateGames() error {
 		price,
 		quantity,
 		releasedateparsed.Format("2006-01-02"),
-		developersearched,
+		elopersearched,
 		description,
 	)
 
@@ -234,7 +234,7 @@ func (h *GameHandler) UpdateGames() error {
 		return nil
 	}
 
-	err = h.gameRepo.UpdateGame(genre, releasedateparsed, developer, title, price, quantity, gameID)
+	err = h.gameRepo.UpdateGame(genre, releasedateparsed, eloper, title, price, quantity, gameID)
 	if err != nil {
 		return fmt.Errorf("error updating games")
 	}
