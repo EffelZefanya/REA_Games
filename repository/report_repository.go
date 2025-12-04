@@ -22,6 +22,8 @@ func (r *ReportRepository) GetDevelopersReport() ([]entity.DeveloperGameCountRep
 			developers d
 		JOIN
 			games g ON d.developer_id = g.developer_id
+		WHERE
+			g.deleted_at IS NULL
 		GROUP BY
 			d.developer_id, d.developer_name
 		ORDER BY
