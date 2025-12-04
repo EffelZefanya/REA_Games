@@ -356,9 +356,9 @@ func (r *GameRepository) UpdateGame(genre []int, release_date time.Time, develop
 func (r *GameRepository) UpdateDescription(description string, game_id int) error {
 	query := `
 		UPDATE games_detail
-		SET description = $1
+		SET description = $1,
 			updated_at = NOW()
-		WHERE game_id = $2
+		WHERE game_detail_id = $2
 		AND deleted_at IS NULL
 	`
 	_, err := r.db.Exec(query, description, game_id)
