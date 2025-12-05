@@ -53,8 +53,7 @@ func (h *OrderHandler) CreateOrder(userID int) error {
 	gameID := h.inputter.ReadInt("\nEnter game ID: ")
 	quantity := h.inputter.ReadInt("Enter quantity: ")
 	if quantity <= 0 {
-		return fmt.Errorf("[Error] Quantity must be greater than 0.")
-		return nil
+		return fmt.Errorf("quantity must be greater than 0")
 	}
 
 	game, err := h.gameRepo.GetGameByID(gameID)
