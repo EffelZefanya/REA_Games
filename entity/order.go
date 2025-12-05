@@ -10,7 +10,6 @@ type Order struct {
 	GameQuantity  int
 	TotalPrice     float64
 	CreatedAt time.Time
-	DeletedAt *time.Time
 	UserEmail string
 	GameTitle string
 }
